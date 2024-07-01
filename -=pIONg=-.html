@@ -20,7 +20,7 @@
         }
         #startMenu {
             position: absolute;
-            top: 60%;
+            top: 70%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
@@ -343,6 +343,16 @@
             ctx.fillText(`Final Score - AI: ${leftScore}  Player: ${rightScore}`, canvas.width / 2, canvas.height * 2 / 3);
         }
 
+        function drawInstructions() {
+            ctx.fillStyle = 'white';
+            ctx.font = '18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('How to Play:', canvas.width / 2, canvas.height / 2 + 20);
+            ctx.fillText('Use ↑ and ↓ arrow keys to move your paddle', canvas.width / 2, canvas.height / 2 + 50);
+            ctx.fillText('Hit the ball with the edge of your paddle for a speed boost', canvas.width / 2, canvas.height / 2 + 80);
+            ctx.fillText('First to make the opponent miss 3 times wins!', canvas.width / 2, canvas.height / 2 + 110);
+        }
+
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -358,6 +368,8 @@
                     
                     ctx.font = '24px Arial';
                     ctx.fillText('Select Difficulty:', canvas.width / 2, canvas.height / 2 - 50);
+
+                    drawInstructions();
                     break;
                 case 'playing':
                     drawBall();
