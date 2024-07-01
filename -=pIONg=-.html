@@ -20,7 +20,7 @@
         }
         #startMenu {
             position: absolute;
-            top: 70%;
+            top: 75%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
@@ -40,7 +40,7 @@
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <canvas id="gameCanvas" width="1200" height="600"></canvas>
     <div id="startMenu">
         <button onclick="startGame('easy')">Easy</button>
         <button onclick="startGame('medium')">Medium</button>
@@ -60,22 +60,22 @@
         const ball = {
             x: canvas.width / 2,
             y: canvas.height / 2,
-            radius: 10,
-            dx: 3,
-            dy: 3,
+            radius: 15,
+            dx: 4,
+            dy: 4,
             speedBoost: 1,
             isAttack: false
         };
 
-        const paddleHeight = 100;
-        const paddleWidth = 10;
+        const paddleHeight = 150;
+        const paddleWidth = 15;
 
         const leftPaddle = {
             x: 0,
             y: canvas.height / 2 - paddleHeight / 2,
             width: paddleWidth,
             height: paddleHeight,
-            dy: 4,
+            dy: 5,
             targetY: canvas.height / 2 - paddleHeight / 2,
             reactionDelay: 0
         };
@@ -86,7 +86,7 @@
             width: paddleWidth,
             height: paddleHeight,
             dy: 0,
-            speed: 6
+            speed: 8
         };
 
         let leftScore = 0;
@@ -94,23 +94,29 @@
 
         // Stars
         const stars = [];
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 200; i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                size: Math.random() * 2,
-                speed: Math.random() * 3 + 1
+                size: Math.random() * 3,
+                speed: Math.random() * 4 + 1
             });
         }
 
         let keys = {};
 
         document.addEventListener('keydown', (e) => {
-            keys[e.key] = true;
+            if (['ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) {
+                e.preventDefault(); // Prevent default scrolling
+            }
+            keys[e.code] = true;
         });
 
         document.addEventListener('keyup', (e) => {
-            keys[e.key] = false;
+            if (['ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) {
+                e.preventDefault(); // Prevent default scrolling
+            }
+            keys[e.code] = false;
         });
 
         canvas.addEventListener('click', (e) => {
@@ -158,10 +164,10 @@
         }
 
         function drawScore() {
-            ctx.font = '24px Arial';
+            ctx.font = '36px Arial';
             ctx.fillStyle = 'white';
             ctx.textAlign = 'left';
-            ctx.fillText(`AI: ${leftScore} (Fails: ${aiFailCount}/3)  Player: ${rightScore} (Fails: ${playerFailCount}/3)`, 10, 30);
+            ctx.fillText(`AI: ${leftScore} (Fails: ${aiFailCount}/3)  Player: ${rightScore} (Fails: ${playerFailCount}/3)`, 20, 50);
         }
 
         function drawStars() {
@@ -191,18 +197,18 @@
             
             switch(difficulty) {
                 case 'easy':
-                    futureY += (Math.random() - 0.5) * 60;
+                    futureY += (Math.random() - 0.5) * 90;
                     break;
                 case 'medium':
-                    futureY += (Math.random() - 0.5) * 40;
+                    futureY += (Math.random() - 0.5) * 60;
                     break;
                 case 'hard':
-                    futureY += (Math.random() - 0.5) * 20;
+                    futureY += (Math.random() - 0.5) * 30;
                     break;
             }
 
             const paddleCenter = leftPaddle.y + leftPaddle.height / 2;
-            if (Math.abs(paddleCenter - futureY) > 2) {
+            if (Math.abs(paddleCenter - futureY) > 3) {
                 if (paddleCenter < futureY) {
                     leftPaddle.y += leftPaddle.dy;
                 } else {
@@ -224,7 +230,7 @@
                     break;
             }
             if (Math.random() < mistakeChance) {
-                leftPaddle.y += (Math.random() - 0.5) * 20;
+                leftPaddle.y += (Math.random() - 0.5) * 30;
             }
 
             leftPaddle.y = Math.max(0, Math.min(canvas.height - leftPaddle.height, leftPaddle.y));
@@ -232,13 +238,13 @@
             // Set a new reaction delay based on difficulty
             switch(difficulty) {
                 case 'easy':
-                    leftPaddle.reactionDelay = Math.floor(Math.random() * 10);
+                    leftPaddle.reactionDelay = Math.floor(Math.random() * 15);
                     break;
                 case 'medium':
-                    leftPaddle.reactionDelay = Math.floor(Math.random() * 7);
+                    leftPaddle.reactionDelay = Math.floor(Math.random() * 10);
                     break;
                 case 'hard':
-                    leftPaddle.reactionDelay = Math.floor(Math.random() * 4);
+                    leftPaddle.reactionDelay = Math.floor(Math.random() * 5);
                     break;
             }
         }
@@ -268,7 +274,7 @@
                 }
 
                 const hitPos = (ball.y - paddleHit.y) / paddleHit.height;
-                ball.dy = 6 * (hitPos - 0.5);
+                ball.dy = 8 * (hitPos - 0.5);
             }
 
             if (ball.x < 0) {
@@ -295,8 +301,8 @@
         function resetBall() {
             ball.x = canvas.width / 2;
             ball.y = canvas.height / 2;
-            ball.dx = (Math.random() > 0.5 ? 1 : -1) * 3;
-            ball.dy = (Math.random() > 0.5 ? 1 : -1) * 3;
+            ball.dx = (Math.random() > 0.5 ? 1 : -1) * 4;
+            ball.dy = (Math.random() > 0.5 ? 1 : -1) * 4;
             ball.speedBoost = 1;
             ball.isAttack = false;
         }
@@ -314,20 +320,20 @@
             // Adjust AI speed based on difficulty
             switch(difficulty) {
                 case 'easy':
-                    leftPaddle.dy = 3;
-                    break;
-                case 'medium':
                     leftPaddle.dy = 4;
                     break;
-                case 'hard':
+                case 'medium':
                     leftPaddle.dy = 5;
+                    break;
+                case 'hard':
+                    leftPaddle.dy = 6;
                     break;
             }
         }
 
         function drawGameOverScreen() {
             ctx.fillStyle = 'white';
-            ctx.font = '48px Arial';
+            ctx.font = '72px Arial';
             ctx.textAlign = 'center';
             
             if (playerWins) {
@@ -336,7 +342,7 @@
                 ctx.fillText('Game Over', canvas.width / 2, canvas.height / 3);
             }
             
-            ctx.font = '24px Arial';
+            ctx.font = '36px Arial';
             ctx.fillText('Click to Return to Menu', canvas.width / 2, canvas.height / 2);
             
             // Display final score
@@ -345,12 +351,12 @@
 
         function drawInstructions() {
             ctx.fillStyle = 'white';
-            ctx.font = '18px Arial';
+            ctx.font = '24px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('How to Play:', canvas.width / 2, canvas.height / 2 + 20);
-            ctx.fillText('Use ↑ and ↓ arrow keys to move your paddle', canvas.width / 2, canvas.height / 2 + 50);
-            ctx.fillText('Hit the ball with the edge of your paddle for a speed boost', canvas.width / 2, canvas.height / 2 + 80);
-            ctx.fillText('First to make the opponent miss 3 times wins!', canvas.width / 2, canvas.height / 2 + 110);
+            ctx.fillText('How to Play:', canvas.width / 2, canvas.height / 2 + 40);
+            ctx.fillText('Use ↑ and ↓ arrow keys to move your paddle', canvas.width / 2, canvas.height / 2 + 80);
+            ctx.fillText('Hit the ball with the edge of your paddle for a speed boost', canvas.width / 2, canvas.height / 2 + 120);
+            ctx.fillText('First to make the opponent miss 3 times wins!', canvas.width / 2, canvas.height / 2 + 160);
         }
 
         function gameLoop() {
@@ -362,11 +368,11 @@
             switch (gameState) {
                 case 'menu':
                     ctx.fillStyle = 'white';
-                    ctx.font = '48px Arial';
+                    ctx.font = '72px Arial';
                     ctx.textAlign = 'center';
                     ctx.fillText('-=pIONg=-', canvas.width / 2, canvas.height / 4);
                     
-                    ctx.font = '24px Arial';
+                    ctx.font = '36px Arial';
                     ctx.fillText('Select Difficulty:', canvas.width / 2, canvas.height / 2 - 50);
 
                     drawInstructions();
